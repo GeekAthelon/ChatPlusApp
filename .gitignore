@@ -2,3 +2,4 @@ node_modules/
 .tmp/
 dist/
 app/scripts/**/*.js
+app/scripts/**/*.js.map
