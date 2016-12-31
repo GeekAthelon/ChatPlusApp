@@ -1,2 +1,2 @@
 # ChatPlusApp
-Progressive Web App for HyperChat systems
+Progressive Web App for HyperChat systems.
