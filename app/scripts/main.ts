@@ -1,3 +1,5 @@
+
+/// <reference path="../../node_modules/@types/es6-promise/index.d.ts"/>
 /// <reference path="../../node_modules/@types/service_worker_api/index.d.ts"/>
 
 /*!
