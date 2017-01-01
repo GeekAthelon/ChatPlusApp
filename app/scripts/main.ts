@@ -2,6 +2,8 @@
 /// <reference path="../../node_modules/@types/es6-promise/index.d.ts"/>
 /// <reference path="../../node_modules/@types/service_worker_api/index.d.ts"/>
 
+import Hchat from './hchat.js';
+
 /*!
  *
  *  Web Starter Kit
@@ -23,6 +25,7 @@
 /* eslint-env browser */
 (function() {
     'use strict';
+
 
     // Check to make sure service workers are supported in the current browser,
     // and that the current page is accessed from a secure origin. Using a
@@ -75,6 +78,9 @@
                 console.error('Error during service worker registration:', e);
             });
     }
+
+    const h = new Hchat('I am alive.');
+    console.log(h.greet());
 
     // Your custom JavaScript goes here
 })();
