@@ -42,19 +42,21 @@ const reload = browserSync.reload;
 
 
 gulp.task('tsc', function() {
+    // return gulp.src('app/**/*.ts');
+
     const tsProject = $.typescript.createProject('tsconfig.json');
 
     return gulp.src('app/**/*.ts')
         .pipe($.sourcemaps.init()) // This means sourcemaps will be generated
         .pipe(tsProject())
         .pipe($.sourcemaps.write()) // Now the sourcemaps are added to the .js file
-        .pipe(gulp.dest('app'));
+        .pipe(gulp.dest('dist'));
 });
 
 
 // Lint JavaScript
 gulp.task('lint', () =>
-     gulp.src(['app/scripts/**/*.js', '!node_modules/**'])
+    gulp.src(['app/scripts/**/*.js', '!node_modules/**'])
     // .pipe($.eslint())
     // .pipe($.eslint.format())
     // .pipe($.if(!browserSync.active, $.eslint.failAfterError()))
@@ -73,8 +75,22 @@ gulp.task('images', () =>
     }))
 );
 
+
 // Copy all files at the root level (app)
-gulp.task('copy', () =>
+gulp.task('copy-lib', () =>
+    gulp.src([
+        'app/lib/**/*'
+    ], {
+        dot: true
+    }).pipe(gulp.dest('dist/lib'))
+    .pipe($.size({
+        title: 'copy'
+    }))
+);
+
+
+// Copy all files at the root level (app)
+gulp.task('copy', ['copy-lib'], () =>
     gulp.src([
         'app/*',
         '!app/*.html',
@@ -126,7 +142,7 @@ gulp.task('styles', () => {
 // Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
 // to enable ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
 // `.babelrc` file.
-gulp.task('scripts', ['tsc'], () =>
+gulp.task('scripts2', ['tsc'], () =>
     gulp.src([
         // Note: Since we are not using useref in the scripts build pipeline,
         //       you need to explicitly list your scripts here in the right order
@@ -149,6 +165,39 @@ gulp.task('scripts', ['tsc'], () =>
     .pipe(gulp.dest('dist/scripts'))
     .pipe(gulp.dest('.tmp/scripts'))
 );
+
+gulp.task('scripts', ['tsc'], () => {
+
+    const path = require("path");
+    const Builder = require('systemjs-builder');
+
+    const buildConfig = {
+        baseURL: './',
+        // defaultJSExtensions: true,
+        transpiler: "typescript",
+        typescriptOptions: {
+            "tsconfig": "./tsconfig.json"
+        },
+        map: {
+       "typescript": "./node_modules/typescript/lib/typescript.js"
+   }
+      };
+
+    const builder = new Builder('app/', buildConfig);
+
+    return builder
+        .bundle(['scripts/main.ts'], 'dist/scripts/main.min.js')
+        .then(function() {
+            console.log('Build complete');
+            console.log(arguments);
+        })
+        .catch(function(err) {
+            console.log('Build error');
+            console.log(err);
+
+        });
+});
+
 
 // Scan your HTML for assets & optimize them
 gulp.task('html', () => {
@@ -267,6 +316,7 @@ gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
         staticFileGlobs: [
             // Add/remove glob patterns to match your directory setup.
             `${rootDir}/images/**/*`,
+            `${rootDir}/lib/**/*.js`,
             `${rootDir}/scripts/**/*.js`,
             `${rootDir}/styles/**/*.css`,
             `${rootDir}/*.{html,json}`
