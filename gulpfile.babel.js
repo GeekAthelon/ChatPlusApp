@@ -42,15 +42,13 @@ const reload = browserSync.reload;
 
 
 gulp.task('tsc', function() {
-    // return gulp.src('app/**/*.ts');
-
     const tsProject = $.typescript.createProject('tsconfig.json');
 
     return gulp.src('app/**/*.ts')
         .pipe($.sourcemaps.init()) // This means sourcemaps will be generated
         .pipe(tsProject())
         .pipe($.sourcemaps.write()) // Now the sourcemaps are added to the .js file
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('app'));
 });
 
 
@@ -174,22 +172,26 @@ gulp.task('scripts', ['tsc'], () => {
     const buildConfig = {
         baseURL: './',
         // defaultJSExtensions: true,
-        transpiler: "typescript",
-        typescriptOptions: {
-            "tsconfig": "./tsconfig.json"
-        },
+        // defaultExtension: 'js',
+        // transpiler: "typescript",
+        // typescriptOptions: {
+        //     "tsconfig": "./tsconfig.json"
+        // },
         map: {
-       "typescript": "./node_modules/typescript/lib/typescript.js"
-   }
-      };
+            "typescript": "./node_modules/typescript/lib/typescript.js"
+        }
+    };
 
     const builder = new Builder('app/', buildConfig);
 
     return builder
-        .bundle(['scripts/main.ts'], 'dist/scripts/main.min.js')
-        .then(function() {
+        .bundle([
+                'scripts/main.js',
+                'scripts/hchat.js',
+            ],
+            'dist/scripts/main.min.js'
+        ).then(function() {
             console.log('Build complete');
-            console.log(arguments);
         })
         .catch(function(err) {
             console.log('Build error');

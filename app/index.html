@@ -376,7 +376,8 @@
 
     <script>
         System.config({
-            baseURL: '/scripts'
+            baseURL: './',
+            defaultExtension: 'js',
         });
     </script>
 
@@ -386,15 +387,17 @@
     <!-- endbuild -->
 
     <script>
-        System.import('main.js').then(function(args) {
+        System.import('scripts/main.js').then(function(args) {
         }).catch(e => {
             console.log("Try1", e);
         });
 
+        /*
         System.import('main.min.js').then(function(args) {
         }).catch(e => {
             console.log("Try2", e);
         });
+        */
     </script>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->

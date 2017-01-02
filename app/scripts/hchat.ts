@@ -4,6 +4,6 @@ export default class HChatInit {
         this.greeting = message;
     }
     greet() {
-        return `Hello, ${this.greeting}?`;
+        return `Goodbye... ${this.greeting}?`;
     }
 }
