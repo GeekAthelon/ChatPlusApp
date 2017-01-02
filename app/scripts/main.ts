@@ -1,6 +1,8 @@
 
 /// <reference path="../../node_modules/@types/es6-promise/index.d.ts"/>
 /// <reference path="../../node_modules/@types/service_worker_api/index.d.ts"/>
+/// <reference path='../../node_modules/@types/sweetalert/index.d.ts'/>
+import * as swal from '../lib/sweetalert.min.js';
 
 import Hchat from './hchat.js';
 
@@ -59,6 +61,28 @@ if ('serviceWorker' in navigator &&
                     installingWorker.onstatechange = function() {
                         switch (installingWorker.state) {
                             case 'installed':
+
+                                swal({
+                                    title: 'New version available',
+                                    text: 'Refresh the page to see the new content.',
+                                    type: 'info',
+                                    showCancelButton: true,
+                                    // confirmButtonColor: '#DD6B55',
+                                    confirmButtonText: 'Reload',
+                                    cancelButtonText: `Don't reload`,
+                                    closeOnConfirm: true
+                                },
+                                    (isConfirm: boolean) => {
+                                        if (isConfirm) {
+                                            alert(`Reloading...`);
+                                            window.location.reload(true);
+                                        } else {
+                                            alert(`Staying with old version`);
+                                        }
+
+                                    });
+
+
                                 // At this point, the old content will have been purged and the
                                 // fresh content will have been added to the cache.
                                 // It's the perfect time to display a "New content is

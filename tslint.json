@@ -1,5 +1,6 @@
 {
     "rules": {
+        "allowJS": true,
         "exclude": "node_modules",
         "class-name": true,
         "comment-format": [true, "check-space"],
